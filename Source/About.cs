@@ -10,7 +10,7 @@ namespace Jimmaphy.AdvancedProductDesignExtractor
             InitializeComponent();
             this.Text = "About APD Extractor";
             this.labelProductName.Text = AssemblyProduct;
-            this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelVersion.Text = "Version 1.1.0";
             this.labelCopyright.Text = "View on GitHub";
             this.labelCompanyName.Text = AssemblyCompany;
             this.textBoxDescription.Text = AssemblyDescription;

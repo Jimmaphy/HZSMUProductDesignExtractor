@@ -1,8 +1,8 @@
 using SharpCompress.Archives;
 using SharpCompress.Archives.Rar;
 using SharpCompress.Common;
+using System.Diagnostics;
 using System.IO.Compression;
-using System.Threading;
 
 namespace Jimmaphy.AdvancedProductDesignExtractor;
 
@@ -133,7 +133,7 @@ public partial class Extractor : Form
 
                         if (extensions.Contains(fileExtension) || archives.Contains(fileExtension))
                         {
-                            string outputFilePath = Path.Combine(studentDirectory, entry.FullName);
+                            string outputFilePath = Path.Combine(studentDirectory, entry.Name);
                             string outputDirectory = Path.GetDirectoryName(outputFilePath);
 
                             if (!Directory.Exists(outputDirectory))
@@ -191,7 +191,7 @@ public partial class Extractor : Form
 
                 if (extensions.Contains(nestedFileExtension))
                 {
-                    string nestedOutputFilePath = Path.Combine(outputDirectory, nestedEntry.FullName);
+                    string nestedOutputFilePath = Path.Combine(outputDirectory, nestedEntry.Name);
                     string nestedOutputDir = Path.GetDirectoryName(nestedOutputFilePath);
 
                     if (!Directory.Exists(nestedOutputDir))
@@ -205,12 +205,6 @@ public partial class Extractor : Form
                 else if (nestedFileExtension == "zip")
                 {
                     string deeperNestedZipPath = Path.Combine(outputDirectory, nestedEntry.FullName);
-                    string deeperNestedOutputDirectory = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(nestedEntry.FullName));
-
-                    if (!Directory.Exists(deeperNestedOutputDirectory))
-                    {
-                        Directory.CreateDirectory(deeperNestedOutputDirectory);
-                    }
 
                     using (var deeperNestedStream = nestedEntry.Open())
                     using (var deeperNestedFileStream = new FileStream(deeperNestedZipPath, FileMode.Create))
@@ -218,7 +212,7 @@ public partial class Extractor : Form
                         deeperNestedStream.CopyTo(deeperNestedFileStream);
                     }
 
-                    ExtractNestedZip(deeperNestedZipPath, deeperNestedOutputDirectory);
+                    ExtractNestedZip(deeperNestedZipPath, outputDirectory);
                 }
             }
         }
@@ -238,7 +232,7 @@ public partial class Extractor : Form
 
                 if (extensions.Contains(nestedFileExtension))
                 {
-                    string nestedOutputFilePath = Path.Combine(outputDirectory, nestedEntry.Key);
+                    string nestedOutputFilePath = Path.Combine(outputDirectory, Path.GetFileName(nestedEntry.Key));
                     string nestedOutputDir = Path.GetDirectoryName(nestedOutputFilePath);
 
                     if (!Directory.Exists(nestedOutputDir))
@@ -252,12 +246,6 @@ public partial class Extractor : Form
                 else if (nestedFileExtension == "rar")
                 {
                     string deeperNestedRarPath = Path.Combine(outputDirectory, nestedEntry.Key);
-                    string deeperNestedOutputDirectory = Path.Combine(outputDirectory, Path.GetFileNameWithoutExtension(nestedEntry.Key));
-
-                    if (!Directory.Exists(deeperNestedOutputDirectory))
-                    {
-                        Directory.CreateDirectory(deeperNestedOutputDirectory);
-                    }
 
                     using (var deeperNestedStream = nestedEntry.OpenEntryStream())
                     using (var deeperNestedFileStream = new FileStream(deeperNestedRarPath, FileMode.Create))
@@ -265,7 +253,7 @@ public partial class Extractor : Form
                         deeperNestedStream.CopyTo(deeperNestedFileStream);
                     }
 
-                    ExtractNestedRar(deeperNestedRarPath, deeperNestedOutputDirectory);
+                    ExtractNestedRar(deeperNestedRarPath, outputDirectory);
                 }
             }
         }
