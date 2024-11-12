@@ -151,7 +151,7 @@ public partial class Extractor : Form
                         
                         if (archives.Contains(fileExtension))
                         {
-                            string nestedZipPath = Path.Combine(studentDirectory, entry.FullName);
+                            string nestedZipPath = Path.Combine(studentDirectory, entry.Name);
 
                             using (var nestedStream = entry.Open())
                             using (var nestedFileStream = new FileStream(nestedZipPath, FileMode.Create))
